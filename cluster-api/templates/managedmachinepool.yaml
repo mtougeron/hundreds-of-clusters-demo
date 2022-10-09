@@ -6,7 +6,7 @@ metadata:
   name: "{{.Values.cluster_name}}-{{regexReplaceAll "\\.+" .Values.instance_type ""}}"
 spec:
   clusterName: "{{.Values.cluster_name}}"
-  replicas: 1
+  replicas: 2
   template:
     spec:
       clusterName: "{{.Values.cluster_name}}"

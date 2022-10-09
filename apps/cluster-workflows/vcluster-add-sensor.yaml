@@ -4,6 +4,7 @@ metadata:
   name: vcluster-add
   namespace: argo
 spec:
+  eventBusName: vcluster-add
   template:
     serviceAccountName: argocd-workflow
   dependencies:

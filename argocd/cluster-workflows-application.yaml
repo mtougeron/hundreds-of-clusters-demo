@@ -13,3 +13,7 @@ spec:
     # Load from HEAD not the PR for security purposes due to the elevated permissions
     targetRevision: HEAD
     path: apps/cluster-workflows
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
