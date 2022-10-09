@@ -6,6 +6,7 @@ metadata:
 spec:
   template:
     serviceAccountName: argocd-workflow
+  eventBusName: vcluster-delete
   resource:
     vcluster-delete:
       namespace: vcluster

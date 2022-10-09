@@ -48,4 +48,6 @@ data:
     export KUBECONFIG="$HOME/.kube/config:$HOME/.kube/my-vcluster.yaml"
 
     kubectl config set-context $cluster --cluster my-vcluster --user my-vcluster
-    argocd cluster rm $cluster
+    # sometimes the cluster is deleted before we get to this point so we need the || true so that it doesn't
+    # fail the job when argocd is unable to remove the ClusterRole & ClusterRoleBinding from the vcluster
+    argocd cluster rm $cluster || true
