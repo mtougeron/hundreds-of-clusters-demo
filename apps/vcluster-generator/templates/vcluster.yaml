@@ -16,14 +16,14 @@ spec:
       serviceCIDR: "{{.Values.serviceCIDR}}"
       service:
         type: {{.Values.service.type }}
-        {{/* Security is IMPORTANT! Be sure to set one of these values! */}}
+        {{- /* Security is IMPORTANT! Be sure to set one of these values! */}}
         {{- with .Values.service.loadBalancerSourceRanges }}
         loadBalancerSourceRanges:
           {{- toYaml . | nindent 10 }}
         {{- end }}
-        {{/* Easier to pass a comma delimited list from an ApplicationSet's Helm values setting */}}
+        {{- /* Easier to pass a comma delimited list from an ApplicationSet's Helm values setting */}}
         {{- if .Values.service.loadBalancerSourceRangesString }}
-        {{ $parts := splitList "," .Values.service.loadBalancerSourceRangesString }}
+        {{- $parts := splitList "," .Values.service.loadBalancerSourceRangesString }}
         loadBalancerSourceRanges:
           {{- range $f := $parts }}
           - "{{ $f }}"

@@ -33,6 +33,8 @@ spec:
             value: "false"
           - name: "prometheusOperator.admissionWebhooks.create"
             value: "false"
+          - name: "prometheusOperator.admissionWebhooks.enabled"
+            value: "false"
       project: default
       destination:
         name: '{{name}}'
