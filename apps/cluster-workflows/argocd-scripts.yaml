@@ -1,0 +1,51 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-scripts
+  namespace: argo
+data:
+  add-to-argocd.sh: |
+    #!/bin/sh
+
+    argocd login argocd-server.argocd.svc.cluster.local --core --insecure --plaintext --grpc-web --username $USERNAME --password $PASSWORD
+
+    cluster_ready=""
+    cluster=$1
+    while [ -z "$cluster_ready" ]
+    do
+        sleep 20
+        kubectl get cluster $cluster -n vcluster
+        cluster_ready=$(kubectl get cluster $cluster -o json -n vcluster | jq -r '. | select(.status.phase=="Provisioned")')
+    done
+
+    # Not sure why in-cluster config isn't working for clusterctl so hacking the kubeconfig...
+    kubectl config set-cluster in-cluster --server=https://kubernetes.default.svc.cluster.local --certificate-authority=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt --embed-certs=true ;
+    kubectl config set-credentials clusterctl --token=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token) ;
+    kubectl config set-context in-cluster --cluster in-cluster --user clusterctl --namespace argocd ;
+    kubectl config use-context in-cluster ;
+
+    clusterctl get kubeconfig $cluster -n vcluster > $HOME/.kube/my-vcluster.yaml
+    export KUBECONFIG="$HOME/.kube/config:$HOME/.kube/my-vcluster.yaml"
+
+    kubectl config set-context $cluster --cluster my-vcluster --user my-vcluster
+    argocd cluster add $cluster --label provider=vcluster -y --upsert
+
+  remove-from-argocd.sh: |
+    #!/bin/sh
+
+    cluster=$1
+
+    argocd login argocd-server.argocd.svc.cluster.local --core --insecure --plaintext --grpc-web --username $USERNAME --password $PASSWORD
+
+    # Not sure why in-cluster config isn't working for clusterctl so hacking the kubeconfig...
+    kubectl config set-cluster in-cluster --server=https://kubernetes.default.svc.cluster.local --certificate-authority=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt --embed-certs=true ;
+    kubectl config set-credentials clusterctl --token=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token) ;
+    kubectl config set-context in-cluster --cluster in-cluster --user clusterctl --namespace argocd ;
+    kubectl config use-context in-cluster ;
+
+    clusterctl get kubeconfig $cluster -n vcluster > $HOME/.kube/my-vcluster.yaml
+    export KUBECONFIG="$HOME/.kube/config:$HOME/.kube/my-vcluster.yaml"
+
+    kubectl config set-context $cluster --cluster my-vcluster --user my-vcluster
+    argocd cluster rm $cluster

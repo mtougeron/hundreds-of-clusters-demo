@@ -1,0 +1,65 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Sensor
+metadata:
+  name: vcluster-delete
+  namespace: argo
+spec:
+  template:
+    serviceAccountName: argocd-workflow
+  dependencies:
+    - name: vcluster-delete
+      eventSourceName: vcluster-delete
+      eventName: vcluster-delete
+  triggers:
+    - template:
+        name: vcluster-delete
+        k8s:
+          operation: create
+          source:
+            resource:
+              apiVersion: argoproj.io/v1alpha1
+              kind: Workflow
+              metadata:
+                generateName: vcluster-delete-
+                labels:
+                  app: vcluster-delete
+              spec:
+                entrypoint: remove-from-argocd
+                serviceAccountName: argocd-workflow
+                arguments:
+                  parameters:
+                  - name: cluster
+                    # the value will get overridden by the event payload from vcluster-delete
+                    value: ""
+                templates:
+                - name: remove-from-argocd
+                  inputs:
+                    parameters:
+                    - name: cluster
+                  container:
+                    image: mtougeron/hundreds-of-clusters-demo
+                    command: ["/bin/sh", "-c", "/etc/argocd-scripts/remove-from-argocd.sh {{inputs.parameters.cluster}}"]
+                    volumeMounts:
+                    - name: argocd-scripts
+                      mountPath: /etc/argocd-scripts/
+                    env:
+                    - name: USERNAME
+                      valueFrom:
+                        secretKeyRef:
+                          key: username
+                          name: argocd-login
+                    - name: PASSWORD
+                      valueFrom:
+                        secretKeyRef:
+                          key: password
+                          name: argocd-login
+                  volumes:
+                  - name: argocd-scripts
+                    configMap:
+                      name: argocd-scripts
+                      defaultMode: 0777
+          parameters:
+            - src:
+                dependencyName: vcluster-delete
+                dataKey: body.metadata.name
+              dest: spec.arguments.parameters.0.value

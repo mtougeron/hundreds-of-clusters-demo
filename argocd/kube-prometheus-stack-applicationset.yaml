@@ -1,0 +1,44 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: kube-prometheus-stack
+spec:
+  generators:
+  - clusters:
+      selector:
+        matchLabels:
+          provider: vcluster
+  template:
+    metadata:
+      name: 'kube-prometheus-stack-{{name}}'
+    spec:
+      source:
+        chart: kube-prometheus-stack
+        repoURL: https://prometheus-community.github.io/helm-charts
+        # Yes, this is a _really_ old version. Hack to find one that doesn't 
+        # have the annotation size problem... It'll be easier once Argo CD 2.5
+        # is released and SSA is available.
+        targetRevision: "18.1.0"
+        helm:
+          parameters:
+          - name: "kubeStateMetrics.enabled"
+            value: "false"
+          - name: "nodeExporter.enabled"
+            value: "false"
+          - name: "grafana.enabled"
+            value: "false"
+          - name: "defaultRules.create"
+            value: "false"
+          - name: "prometheusOperator.admissionWebhooks.create"
+            value: "false"
+      project: default
+      destination:
+        name: '{{name}}'
+        namespace: monitoring
+      syncPolicy:
+        syncOptions:
+          - CreateNamespace=true
+        automated:
+          prune: true
+          selfHeal: true

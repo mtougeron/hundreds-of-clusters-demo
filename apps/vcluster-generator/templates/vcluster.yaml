@@ -1,0 +1,34 @@
+---
+apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+kind: VCluster
+metadata:
+  name: {{.Values.cluster_name}}
+spec:
+  controlPlaneEndpoint:
+    host: ""
+    port: 0
+  helmRelease:
+    chart:
+      name: {{.Values.chart_name}}
+      repo: {{.Values.chart_repo}}
+      version: {{.Values.chart_version}}
+    values: |
+      service:
+        type: {{.Values.service.type }}
+        {{/* Security is IMPORTANT! Be sure to set one of these values! */}}
+        {{- with .Values.service.loadBalancerSourceRanges }}
+        loadBalancerSourceRanges:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{/* Easier to pass a comma delimited list from an ApplicationSet's Helm values setting */}}
+        {{- if .Values.service.loadBalancerSourceRangesString }}
+        {{ $parts := splitList "," .Values.service.loadBalancerSourceRangesString }}
+        loadBalancerSourceRanges:
+          {{- range $f := $parts }}
+          - "{{ $f }}"
+          {{- end }}
+        {{- end }}
+      securityContext:
+        runAsUser: 12345
+        runAsNonRoot: true
+  kubernetesVersion: "{{.Values.kubernetes_version}}"

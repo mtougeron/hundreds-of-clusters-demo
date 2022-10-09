@@ -1,0 +1,105 @@
+################################
+# 
+# WARNING WARNING WARNING
+# 
+# this is NOT production code
+# it is entirely for the demo
+# purposes and is entirely way
+# too permissive for production
+# 
+# WARNING WARNING WARNING
+# 
+################################
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: argocd-workflow
+  namespace: argo
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: argo-events-workflows
+  namespace: argo
+rules:
+- apiGroups: ["argoproj.io"]
+  verbs: ["*"]
+  resources: ["workflows", "workflowtemplates"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: argocd-events-workflows
+  namespace: argo
+subjects:
+- kind: ServiceAccount
+  name: argocd-workflow
+  namespace: argo
+roleRef:
+  kind: Role
+  name: argo-events-workflows
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: argocd-workflow
+  namespace: argocd
+rules:
+- apiGroups: ["argoproj.io"]
+  resources: ["*"]
+  verbs: ["get", "watch", "list", "update"]
+- apiGroups: ["argoproj.io"]
+  verbs: ["*"]
+  resources: ["workflows", "workflowtemplates"]
+- apiGroups: [""]
+  resources: ["configmaps", "secrets"]
+  verbs: ["get", "watch", "list", "update", "create", "delete"]
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "watch", "list"]
+- apiGroups: [""]
+  resources: ["pods/portforward"]
+  verbs: ["get", "watch", "list", "create"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: argocd-workflow
+  namespace: argocd
+subjects:
+- kind: ServiceAccount
+  name: argocd-workflow
+  namespace: argo
+roleRef:
+  kind: Role
+  name: argocd-workflow
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: argocd-workflow
+  namespace: vcluster
+rules:
+- apiGroups: ["cluster.x-k8s.io"]
+  resources: ["clusters"]
+  verbs: ["get", "watch", "list"]
+- apiGroups: [""]
+  resources: ["secrets"]
+  verbs: ["get", "watch", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: argocd-workflow
+  namespace: vcluster
+subjects:
+- kind: ServiceAccount
+  name: argocd-workflow
+  namespace: argo
+roleRef:
+  kind: Role
+  name: argocd-workflow
+  apiGroup: rbac.authorization.k8s.io

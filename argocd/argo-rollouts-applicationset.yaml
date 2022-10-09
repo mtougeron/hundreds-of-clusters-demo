@@ -1,0 +1,29 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: argo-rollouts
+spec:
+  generators:
+  - clusters:
+      selector:
+        matchLabels:
+          provider: vcluster
+  template:
+    metadata:
+      name: 'argo-rollouts-{{name}}'
+    spec:
+      source:
+        repoURL: 'https://github.com/mtougeron/hundreds-of-clusters-demo.git'
+        targetRevision: HEAD
+        path: apps/argo-rollouts
+      project: default
+      destination:
+        name: '{{name}}'
+        namespace: argo-rollouts
+      syncPolicy:
+        syncOptions:
+          - CreateNamespace=true
+        automated:
+          prune: true
+          selfHeal: true

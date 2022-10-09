@@ -1,0 +1,15 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-workflows
+  namespace: argocd
+spec:
+  destination:
+    name: in-cluster
+  project: default
+  source:
+    repoURL: https://github.com/mtougeron/hundreds-of-clusters-demo.git
+    # Load from HEAD not the PR for security purposes due to the elevated permissions
+    targetRevision: HEAD
+    path: apps/cluster-workflows

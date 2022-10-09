@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: EventSource
+metadata:
+  name: vcluster-delete
+  namespace: argo
+spec:
+  template:
+    serviceAccountName: argocd-workflow
+  resource:
+    vcluster-delete:
+      namespace: vcluster
+      group: cluster.x-k8s.io
+      version: v1beta1
+      resource: clusters
+      eventTypes:
+        - DELETE
+      filter:
+        afterStart: true
