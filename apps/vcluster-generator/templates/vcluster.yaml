@@ -13,6 +13,7 @@ spec:
       repo: {{.Values.chart_repo}}
       version: {{.Values.chart_version}}
     values: |
+      serviceCIDR: "{{.Values.serviceCIDR}}"
       service:
         type: {{.Values.service.type }}
         {{/* Security is IMPORTANT! Be sure to set one of these values! */}}
@@ -31,4 +32,5 @@ spec:
       securityContext:
         runAsUser: 12345
         runAsNonRoot: true
+      fsGroup: 12345
   kubernetesVersion: "{{.Values.kubernetes_version}}"
