@@ -27,6 +27,8 @@ kubectl patch deployment \
 ]}]'
 
 
+kubectl create secret generic argocd-login --from-literal=password=THE_ARGOCD_PASSWORD_FROM_ABOVE --from-literal=username=admin -n argo
+
 
 
 
