@@ -4,7 +4,7 @@ chart_name: "null"
 chart_repo: "null"
 chart_version: "null"
 kubernetes_version: "1.23"
-serviceCIDR: "192.168.0.0/16"
+serviceCIDR: "172.20.0.0/16"
 service:
   type: "LoadBalancer"
   loadBalancerSourceRanges: []
