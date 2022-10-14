@@ -1,4 +1,4 @@
-# hundreds-of-clusters-demo
+# Hundreds of Clusters Sitting in a Tree with Argo CD Demo Repository
 
 Demo repository for the code for the "_Hundreds of Clusters Sitting in a Tree with Argo CD_" talk at [GitOpsCon NA 2022](https://sched.co/1AR8S).
 
