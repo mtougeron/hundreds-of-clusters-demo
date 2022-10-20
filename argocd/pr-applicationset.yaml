@@ -22,7 +22,7 @@ spec:
     spec:
       source:
         repoURL: 'https://github.com/mtougeron/hundreds-of-clusters-demo.git'
-        targetRevision: '{{head_sha}}'
+        targetRevision: 'HEAD'
         path: apps/vcluster-generator
         helm:
           parameters:
