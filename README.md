@@ -4,7 +4,7 @@ Demo repository for the code for the "_Hundreds of Clusters Sitting in a Tree wi
 
 ## WARNING!!!
 
-**Warning**: Thar **_BE SERIOUS_** dragons here...
+**WARNING**: Thar **_BE SERIOUS_** dragons here...
 
 If you leave the PR generator running on a public repo, someone could apply apply things onto your cluster that you don't want installed. *DO NOT DO THIS!*
 
