@@ -30,7 +30,9 @@ argocd account update-password
 ## Install Argo Workflows
 
 ```sh
-kubectl apply -n argo -f https://raw.githubusercontent.com/argoproj/argo-workflows/stable/manifests/install.yaml
+# kubectl apply -n argo -f https://raw.githubusercontent.com/argoproj/argo-workflows/stable/manifests/install.yaml
+kubectl apply -n argo -f https://github.com/argoproj/argo-workflows/releases/download/v3.4.5/install.yaml
+
 kubectl patch deployment \
   argo-server \
   --namespace argo \
@@ -44,9 +46,12 @@ kubectl patch deployment \
 ## Install Argo Events
 
 ```sh
-kubectl apply -f https://raw.githubusercontent.com/argoproj/argo-events/stable/manifests/install.yaml
-kubectl apply -f https://raw.githubusercontent.com/argoproj/argo-events/stable/manifests/install-validating-webhook.yaml
-kubectl apply -n argo-events -f https://raw.githubusercontent.com/argoproj/argo-events/stable/examples/eventbus/native.yaml
+kubectl create namespace argo-events
+kubectl apply -n argo-events -f https://github.com/argoproj/argo-events/releases/download/v1.7.6/install.yaml
+
+kubectl apply -n argo-events -f https://raw.githubusercontent.com/argoproj/argo-events/v1.7.6/examples/eventbus/native.yaml
+kubectl apply -n argo-events -f https://github.com/argoproj/argo-events/releases/download/v1.7.6/install-validating-webhook.yaml
+
 ```
 
 ## Add the Argo CD Password to the argo namespace
