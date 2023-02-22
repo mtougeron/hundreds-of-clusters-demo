@@ -38,7 +38,7 @@ spec:
                     parameters:
                     - name: cluster
                   container:
-                    image: mtougeron/hundreds-of-clusters-demo
+                    image: mhumesf/hundreds-of-clusters-demo
                     command: ["/bin/sh", "-c", "/etc/argocd-scripts/remove-from-argocd.sh {{inputs.parameters.cluster}}"]
                     volumeMounts:
                     - name: argocd-scripts

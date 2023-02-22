@@ -9,7 +9,7 @@ spec:
     name: in-cluster
   project: default
   source:
-    repoURL: https://github.com/mtougeron/hundreds-of-clusters-demo.git
+    repoURL: https://github.com/mhumesf/hundreds-of-clusters-demo.git
     # Load from HEAD not the PR for security purposes due to the elevated permissions
     targetRevision: HEAD
     path: apps/cluster-workflows

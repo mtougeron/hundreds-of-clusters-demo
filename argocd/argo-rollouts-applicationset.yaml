@@ -15,7 +15,7 @@ spec:
       name: 'argo-rollouts-{{name}}'
     spec:
       source:
-        repoURL: 'https://github.com/mtougeron/hundreds-of-clusters-demo.git'
+        repoURL: 'https://github.com/mhumesf/hundreds-of-clusters-demo.git'
         targetRevision: HEAD
         path: apps/argo-rollouts
       project: default

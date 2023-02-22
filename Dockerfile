@@ -15,5 +15,5 @@ RUN apt update \
     && chmod +x ./argocd \
     && mv ./argocd /usr/local/bin/argocd
 
-# docker build -t mtougeron/hundreds-of-clusters-demo .
-# docker push mtougeron/hundreds-of-clusters-demo
+# docker build -t mhumesf/hundreds-of-clusters-demo .
+# docker push mhumesf/hundreds-of-clusters-demo
